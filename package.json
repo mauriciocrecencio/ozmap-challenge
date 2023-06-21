@@ -22,8 +22,10 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/developmentOneZero/fileteste#readme",
   "dependencies": {
+    "dotenv": "^16.3.1",
     "koa": "^2.13.0",
-    "koa-router": "^9.4.0"
+    "koa-router": "^9.4.0",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "chai": "^4.2.0",
