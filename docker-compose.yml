@@ -7,3 +7,5 @@ services:
         context: .
       ports:
         - "3000:3000"
+      # command: ["npm","run","migration:run"]
+      # command: npm run migration:run
