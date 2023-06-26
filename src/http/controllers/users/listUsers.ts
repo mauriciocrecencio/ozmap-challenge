@@ -1,4 +1,3 @@
-import { z } from "zod";
 import UsersRepository from "../../../repositories/users/UsersRepository"
 import { Context } from "koa";
 
@@ -15,6 +14,7 @@ export async function listUsers(ctx: Context) {
     ctx.response.body = {users}
 
   } catch (err) {
+    ctx.response.status = 400
     if (err) {
       console.log(err)
     }

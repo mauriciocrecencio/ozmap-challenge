@@ -5,7 +5,7 @@ export interface User {
 }
 
 export interface UpdateUser {
-  nome: string;
-  newNome?: string
-  newIdade?: number
+  nomeQuery: string;
+  nome?: string
+  idade?: number
 }

@@ -21,32 +21,36 @@ export default class UsersRepository implements UsersRepositoryInterface {
   }
 
   async create(data: UserInterface): Promise<User> {
+    const userAlreadyExists = await this.repository.findOneBy({email : data.email})
+    if(userAlreadyExists) {
+      throw new Error("User already exists")
+    }
     const user = this.repository.create(data)
     await this.repository.save(user)
     return user
   }
 
-  // TODO: Typar
   async delete(nome: string): Promise<any> {
     const user = await this.repository.findOneBy({nome})
     if(user) {
        await this.repository.delete(user)
        return user
     } else {
-      throw new Error("usuario não encontrado")
+      throw new Error("User not found")
     }
   }
 
-  async update({nome, newNome, newIdade}:UpdateUser): Promise<any> {
-    let user = await this.find(nome)
+  async update({nomeQuery, nome, idade}:UpdateUser): Promise<any> {
+    let user = await this.find(nomeQuery)
+
     if(!user) {
-      throw new Error('usuario nao econtrado')
+      throw new Error('User not found')
     }
-    if(newNome) {
-      user.nome = newNome
+    if(nome) {
+      user.nome = nome
     }
-    if(newIdade) {
-      user.idade = newIdade
+    if(idade) {
+      user.idade = idade
     }
     await this.repository.save(user)
     return user

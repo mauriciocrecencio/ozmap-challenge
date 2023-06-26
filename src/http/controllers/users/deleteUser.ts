@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { ZodError, z } from "zod";
 import UsersRepository from "../../../repositories/users/UsersRepository"
 import { Context } from "koa";
 
@@ -8,16 +8,23 @@ export async function deleteUser(ctx: Context) {
   const registerBodySchema = z.object({
     nome: z.string(),
   })
-  const { nome } = registerBodySchema.parse(ctx.params)
-
   try {
+    const { nome } = registerBodySchema.parse(ctx.params)
+
     if(!(await usersRepository.find(nome))) {
-      return new Error('User not exist')
+      ctx.response.status = 404
+      ctx.response.body = {message: "User not found"}
+      return
     }
     const user = await usersRepository.delete(nome)
     ctx.response.body = user
 
   } catch (err) {
+    if(err instanceof ZodError) {
+      ctx.response.status = 400
+      ctx.response.body = err.issues
+      return
+    }
     console.log(err)
     throw err
   }
