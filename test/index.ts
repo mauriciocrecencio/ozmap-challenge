@@ -1,31 +1,19 @@
-//sample test
-//Para rodar os testes, use: npm test
-//PS: Os testes não estão completos e alguns podem comnter erros.
-
-// veja mais infos em:
-//https://mochajs.org/
-//https://www.chaijs.com/
-//https://www.chaijs.com/plugins/chai-json-schema/
-//https://developer.mozilla.org/pt-PT/docs/Web/HTTP/Status (http codes)
 // @ts-nocheck
 
 import chai,{ expect } from 'chai';
 import app from '../src/index'
 import { userNotFoundSchema, userSchema } from '../test-utils/schemas';
-import UsersRepository from '../src/repositories/users/UsersRepository';
 import {  beforeEach } from 'mocha';
 import { users } from '../test-utils/user-factory';
 
 const chaiHttp = require('chai-http')
 const chaiJson = require('chai-json-schema')
+
 chai.use(chaiHttp);
 chai.use(chaiJson);
 
 describe('Testes da aplicaçao',  () => {
     beforeEach(done => {
-        // let repository = new UsersRepository()
-        // repository.repository.clear()
-        // users.map(user => repository.create(user))
         setTimeout(done, 500)
     });
 
@@ -105,18 +93,36 @@ describe('Testes da aplicaçao',  () => {
         });
     });
 
-    // before(done => {
-    //     let repository = new UsersRepository()
-    //     users.map(user => repository.create(user))
-    //     done()
-    // });
+    // Essa função deveria ser utilizado em um 'before' antes do teste
+    it('deveria cadastrar 5 usuários no banco de dados', function(done) {
+        var count = 0;
+        var length = users.length;
+    
+        if (length === 0) {done();}
+    
+        users.forEach(function (rec) {
+            chai.request(app)
+                .post('/user')
+                .send(rec)
+                .end(function (err, res) {
+                    if (err) {
+                        console.error('Delete keywords err: ' + err.message);
+                        this.skip();
+                    } else {
+                        count++;
+                        if (count === length) {done();}
+                        }
+                });
+            });
+        });
+
     it('deveria ser uma lista com pelo menos 5 usuarios',  function (done) {
         chai.request(app)
         .get('/users')
         .end(function (err, res) {
             expect(err).to.be.null;
             expect(res).to.have.status(200);
-            expect(res.body).length.to.be.greaterThan(5)
+            expect(res.body.users.length).to.be.greaterThanOrEqual(5)
             done();
         });
     });

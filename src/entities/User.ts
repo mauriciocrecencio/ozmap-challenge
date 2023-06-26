@@ -7,5 +7,11 @@ export class User {
   id: number
 
   @Column({ type: 'text' })
-  name: string
+  nome: string
+
+  @Column({ type: 'text' })
+  email: string
+
+  @Column({ type: 'integer' })
+  idade: number
 }
