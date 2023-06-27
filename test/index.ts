@@ -4,7 +4,7 @@ import chai,{ expect } from 'chai';
 import app from '../src/index'
 import { userNotFoundSchema, userSchema } from '../test-utils/schemas';
 import {  beforeEach } from 'mocha';
-import { users } from '../test-utils/user-factory';
+import { james100YearsOld, users } from '../test-utils/user-factory';
 
 const chaiHttp = require('chai-http')
 const chaiJson = require('chai-json-schema')
@@ -123,6 +123,18 @@ describe('Testes da aplicaçao',  () => {
             expect(err).to.be.null;
             expect(res).to.have.status(200);
             expect(res.body.users.length).to.be.greaterThanOrEqual(5)
+            done();
+        });
+    });
+
+    it('deveria alterar a idade do usuário James de 44 para 100',  function (done) {
+        chai.request(app)
+        .patch('/user/James')
+        .send({idade: 100, nome: "James"})
+        .end(function (err, res) {
+            expect(err).to.be.null;
+            expect(res).to.have.status(200);
+            expect(res.body).to.contain({idade: 100})
             done();
         });
     });

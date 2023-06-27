@@ -8,7 +8,10 @@ export async function updateUser(ctx: Context) {
   const registerBodySchema = z.object({
     nome: z.string(),
     idade: z.number().min(18),
-  })
+  }).partial().refine(
+    data => data.nome || data.idade,
+    'Field "nome" or "idade" is required.',
+  )
   try {
     const nomeQuery = ctx.params.nome
     const { nome, idade } = registerBodySchema.parse(ctx.request.body)
