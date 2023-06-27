@@ -6,5 +6,5 @@ export default interface UsersRepositoryInterface {
   find(nome: string | undefined): Promise<User | null>;
   create(data: UserInterface): Promise<User>;
   delete(nome: String): Promise<User>
-  update({nome, newNome, newIdade}: UpdateUser): Promise<User>
+  update({nome, nomeQuery, idade}: UpdateUser): Promise<User>
 }

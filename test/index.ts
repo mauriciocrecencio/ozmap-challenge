@@ -4,7 +4,7 @@ import chai,{ expect } from 'chai';
 import app from '../src/index'
 import { userNotFoundSchema, userSchema } from '../test-utils/schemas';
 import {  beforeEach } from 'mocha';
-import { james100YearsOld, users } from '../test-utils/user-factory';
+import { users } from '../test-utils/user-factory';
 
 const chaiHttp = require('chai-http')
 const chaiJson = require('chai-json-schema')
@@ -48,7 +48,6 @@ describe('Testes da aplicaçao',  () => {
             done();
         });
     });
-    //...adicionar pelo menos mais 5 usuarios. se adicionar usuario menor de idade, deve dar erro. Ps: não criar o usuario naoExiste
 
     it('o usuario naoExiste não existe no sistema', function (done) {
         chai.request(app)
@@ -78,6 +77,17 @@ describe('Testes da aplicaçao',  () => {
             expect(err).to.be.null;
             expect(res).to.have.status(200);
             expect(res.body).to.be.jsonSchema(userSchema);
+            done();
+        });
+    });
+
+    it('deveria conter uma mensagem de usuário não encontrado', function (done) {
+        chai.request(app)
+        .delete('/user/usuarioQualquer')
+        .end(function (err, res) {
+            expect(err).to.be.null;
+            expect(res).to.have.status(404);
+            expect(res.body).to.contain({message: 'User not found'});
             done();
         });
     });
@@ -138,4 +148,29 @@ describe('Testes da aplicaçao',  () => {
             done();
         });
     });
+
+    it('deveria alterar o nome do usuário James para Bond',  function (done) {
+        chai.request(app)
+        .patch('/user/James')
+        .send({nome: "Bond"})
+        .end(function (err, res) {
+            expect(err).to.be.null;
+            expect(res).to.have.status(200);
+            expect(res.body).to.contain({nome: 'Bond'})
+            done();
+        });
+    });
+
+    it('o usuário Bond deveria estar com o nome Bond e com 100 anos',  function (done) {
+        chai.request(app)
+        .get('/user/Bond')
+        .end(function (err, res) {
+            expect(err).to.be.null;
+            expect(res).to.have.status(200);
+            expect(res.body).to.contain({nome: 'Bond', idade: 100})
+            done();
+        });
+    });
+
+
 })
