@@ -2,6 +2,21 @@
 
 Simples API desenvolvida em Node com o auxílio do framework KOA. Conta com testes utilizando as ferramentas Chai e Mocha
 
+## Instalação e rodando a API
+
+A aplicação tem o Docker configurado, então rodando o comando abaixo, já irá subir um container Docker com a porta 3000 exposta para as requisições:
+
+```bash
+  docker-compose up
+```
+
+Caso tenha algum problema com o Docker, pode instalar as dependências e iniciar o servidor manualmente com:
+
+```bash
+npm install
+npm run dev
+```
+
 ## API Reference
 
 #### Listar todos os usuários
