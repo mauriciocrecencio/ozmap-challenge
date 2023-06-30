@@ -7,6 +7,11 @@ import bodyParser from 'koa-bodyparser';
 const koa = new Koa();
 
 koa.use(bodyParser());
+koa.use(async (ctx, next) => {
+    ctx.set('Access-Control-Allow-Origin', '*');
+    ctx.set('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+    await next();
+});
 koa.use(userRoutes.routes())
 
 const app = koa.listen(env.PORT);
